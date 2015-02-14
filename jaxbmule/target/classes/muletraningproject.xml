@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:mulexml="http://www.mulesoft.org/schema/mule/xml" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.6.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd">
+    <http:listener-config name="HTTP_Listener_Configuration" host="127.0.0.1" port="7070" doc:name="HTTP Listener Configuration"/>
+    <file:connector name="File"  autoDelete="false" streaming="true" validateConnections="true" doc:name="File"/>
+    <!-- <append-string-transformer message="AFTest" name="Append_String" doc:name="Append String"/> -->
+    <!-- <mulexml:jaxb-context name="JAXB_Context" packageNames="com" doc:name="JAXB Context"/> -->
+    <!-- <flow name="muletraningprojectFlow1">
+        <file:inbound-endpoint path="C:\Users\ramvemur\Desktop\Mule1"  moveToDirectory="C:\Users\ramvemur\Desktop\Mule2" responseTimeout="10000" doc:name="DasuFile" connector-ref="File" transformer-refs="Append_String"/>
+        <logger message="all files are copied given contained floder." level="INFO" doc:name="DasuLogger" doc:description="Testing"/>
+        <echo-component doc:name="FileEcho"/>
+    </flow> -->
+    <flow name="muletraningprojectFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/" doc:name="HTTP"/>
+        <echo-component doc:name="Echo"/>
+    </flow>
+    <flow name="basic_tutorialFlow">
+    <http:listener config-ref="HTTP_Listener_Configuration" path="/{name}"   doc:name="HTTP"/>
+    <set-variable variableName="name" value="#[message.inboundProperties['http.uri.params']['name']]" doc:name="Variable"/>
+    <set-payload doc:name="Set Payload" value="#['Hello, ' + flowVars['name'] + '. Today is ' + server.dateTime.format('dd/MM/yy') + '.' ]"/>
+	</flow>
+    <flow name="muletraningprojectFlow2">
+        <file:inbound-endpoint path="C:\Users\ramvemur\Desktop\Mule1" responseTimeout="10000" doc:name="InboundFile" connector-ref="File"/>
+        <logger message="Files are copied to given directory to other directory" level="INFO" doc:name="DasuFileLogger"/>
+        <json:xml-to-json-transformer doc:name="XML to JSON"/>
+        <file:outbound-endpoint path="C:\Users\ramvemur\Desktop\Mule2"  responseTimeout="10000" doc:name="OutboundFile" connector-ref="File"/>
+        <echo-component doc:name="FileOutputEcho"/>
+    </flow>
+ 	
+ </mule>
