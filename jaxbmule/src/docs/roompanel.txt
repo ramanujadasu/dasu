@@ -1,0 +1,15 @@
+sh deploy.sh
+
+wwwsource
+dev --  sh build.sh android
+
+
+smartspace
+
+cd smartspace 
+cordova build anroid --release
+---
+
+
+
+ant --unrelease
